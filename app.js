@@ -5,7 +5,7 @@ const app = express()
 // ruta
 
 app.get('/hello', (req, res) => {
-    res.send('Task Manager App')
+    res.send('Task Manager App + Github')
     
 })
 
