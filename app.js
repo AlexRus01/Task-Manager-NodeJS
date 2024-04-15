@@ -1,3 +1,5 @@
+require('./db/connect')
+
 //Initializam serverul express
 const express = require('express')
 const app = express()
