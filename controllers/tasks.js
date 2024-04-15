@@ -4,11 +4,11 @@ const getAllTasks = (req, res) => {
 }
 
 const createTask = (req, res) => {
-    res.send('Create Task')
+    res.json(req.body)
 }
 
 const getTask = (req, res) => {
-    res.send('Get single Task')
+    res.json("{id:req.params.id}")
 }
 
 const updateTask = (req, res) => {
@@ -26,3 +26,9 @@ module.exports = {
     deleteTask,
     updateTask
 }
+
+/*
+mongodb+srv://<username>:<password>@cluster0.bbzg8jn.mongodb.netAlexTask?retryWrites=true&w=majority&appName=Cluster0
+
+database Name = AlexTask
+*/
