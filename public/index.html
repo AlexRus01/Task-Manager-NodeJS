@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <a href="signin.html" class="btn">Sign In</a>
+    <a href="signup.html" class="btn">Sign Up</a>
+    <div class="user-info">
+      Logged in as: <span id="current-user"></span>
+    </div>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,5 +48,33 @@
       referrerpolicy="no-referrer"
     ></script>
     <script src="./browser-app.js"></script>
+  <script>
+    const userDisplay = document.getElementById('current-user');
+
+async function fetchCurrentUser() {
+  const token = localStorage.getItem('authToken'); // Or use cookies
+  if (!token) {
+    userDisplay.textContent = 'Not logged in';
+    return;
+  }
+
+  try {
+    const response = await axios.get('http://localhost:3000/api/v1/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const { username } = response.data; // Adjust this field to match your data model
+    userDisplay.textContent = username || 'Anonymous User';
+  } catch (error) {
+    userDisplay.textContent = 'Unable to fetch user data';
+    console.error(error);
+  }
+}
+
+// Fetch the user information on page load
+fetchCurrentUser();
+  </script>
   </body>
 </html>

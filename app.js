@@ -1,19 +1,24 @@
-require('./db/connect')
+// app.js
+require('./db/connect');
+const express = require('express');
+const authRoutes = require('./routes/auth');
+const taskRoutes = require('./routes/tasks');
+const authMiddleware = require('./middleware/auth'); // Import your custom middleware
 
-//Initializam serverul express
-const express = require('express')
-const app = express()
+const app = express();
 
-const tasks = require('./routes/tasks')
-
-// middleWare
+// Middleware
 app.use(express.static('./public'))
-app.use(express.json())
+app.use(express.json());
+
+// Rute publice
+app.use('/api/v1/auth', authRoutes);
+
+// Rute private (folosesc middleware-ul de autentificare)
+app.use('/api/v1/tasks', taskRoutes);
+
+const port = 3000;
+app.listen(port, console.log(`Serverul functioneaza pe portul ${port}...`));
 
 
-app.use('/api/v1/tasks', tasks)
-
-
-const port = 3000
-
-app.listen(port, console.log(`Serverul functioneaza pe portul ${port}...`))
+// Public rou
