@@ -1,27 +1,37 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+// Example function to sign a token using your secret key
+function generateToken(user) {
+  const payload = { userId: user._id };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
 
-const authMiddleware = (req, res, next) => {
+//localStorage.setItem('authToken', token);
+const authMiddleware = async (req, res, next) => {
+  console.log('Auth Middleware reached');
+
+  // Log all headers to debug missing information
+  console.log('Received headers:', req.headers);
+
   const authHeader = req.headers.authorization;
-
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    console.log('Missing or improperly formatted Authorization header');
+    console.log('Authorization header missing or improperly formatted');
     return res.status(401).json({ msg: 'Authorization header missing or improperly formatted' });
   }
 
   const token = authHeader.split(' ')[1];
-
   try {
-    // Log the token for debugging purposes
-    console.log('Verifying token:', token);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Make sure your secret matches
+    const user = await User.findById(decoded.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
 
-    const decoded = jwt.verify(token, 'your_jwt_secret'); // Replace with your actual secret
-    console.log('Decoded user info:', decoded);
-
-    req.user = { userId: decoded.userId };
-    next();
+    req.user = user;
+    next(); // Proceed to the next middleware
   } catch (err) {
     console.error('JWT verification error:', err);
-    res.status(401).json({ msg: 'Invalid or expired token' });
+    return res.status(505).json({ msg: 'Invalid or expired token' });
   }
 };
 

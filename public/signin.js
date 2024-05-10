@@ -1,29 +1,27 @@
-// Obține elementele formularului și mesajului
 const signinForm = document.getElementById('signin-form');
 const message = document.getElementById('message');
 
-// Adaugă un eveniment pentru trimiterea formularului
+// Event listener for form submission
 signinForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  // Obține valorile introduse în formular
+  // Get form values
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
   try {
-    // Trimite cererea POST pentru a te autentifica
+    // Send POST request to sign in
     const response = await axios.post('http://localhost:3000/api/v1/auth/signin', {
       username,
       password
     });
 
-    // Obține token-ul JWT
+    // Extract JWT token from response
     const { token } = response.data;
 
-    // Stochează token-ul în LocalStorage sau Cookie pentru cereri ulterioare
+    // Store token in localStorage
     localStorage.setItem('authToken', token);
-
-    // Afișează mesaj de succes și redirecționează către pagina principală
+    // Show success message and redirect
     message.textContent = 'Login successful! Redirecting...';
     setTimeout(() => {
       window.location.href = 'index.html';

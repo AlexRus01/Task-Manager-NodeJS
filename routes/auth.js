@@ -1,10 +1,16 @@
-// routes/auth.js
 const express = require('express');
 const { signup, signin, getCurrentUser } = require('../controllers/auth');
-const router = express.Router();
-const authMiddleware = require('../middleware/auth'); // Ensure this middleware verifies the JWT
+const authMiddleware = require('../middleware/auth');
 
+const router = express.Router();
+
+// User sign-up route
 router.post('/signup', signup);
+
+// User sign-in route
 router.post('/signin', signin);
-router.get('/me', getCurrentUser); // Current user endpoint
+
+// Get current user info (protected route)
+router.get('/me',authMiddleware, getCurrentUser);
+
 module.exports = router;

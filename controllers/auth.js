@@ -16,6 +16,8 @@ const signup = async (req, res) => {
   }
 };
 
+
+
 const signin = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -35,17 +37,25 @@ const signin = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+
+
 const getCurrentUser = async (req, res) => {
   try {
+    console.log("am ajuns in getcurrentuser")
+    // Add logging to understand what information is missing
+    console.log('Request user object:', req.body.username);
+    
+    // Verify if `req.user` is correctly populated
     if (!req.user || !req.user._id) {
       console.error('User information missing in request.');
-      return res.status(401).json({ msg: 'Unauthorized: No user information available' });
+      return res.status(405).json({ msg: 'Unauthorized: No user information available' });
     }
 
+    // Find user by their ID without the password
     const user = await User.findById(req.user._id).select('-password');
     
     if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+      return res.status(406).json({ msg: 'User not found' });
     }
 
     // Return user info without sensitive data
@@ -55,5 +65,6 @@ const getCurrentUser = async (req, res) => {
     res.status(500).json({ msg: 'Server error in the function' });
   }
 };
+
 
 module.exports = { signup, signin, getCurrentUser };

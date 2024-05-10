@@ -3,9 +3,10 @@
   <head>
     <a href="signin.html" class="btn">Sign In</a>
     <a href="signup.html" class="btn">Sign Up</a>
-    <div class="user-info">
+    <!--<div class="user-info">
       Logged in as: <span id="current-user"></span>
     </div>
+  -->
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,30 +52,43 @@
   <script>
     const userDisplay = document.getElementById('current-user');
 
+
+/*
+// Function to fetch the current user information using the JWT token
 async function fetchCurrentUser() {
-  const token = localStorage.getItem('authToken'); // Or use cookies
+  const token = localStorage.getItem('authToken'); // Retrieve token from localStorage
+  console.log(token)
+  // Handle the case where the user is not logged in
   if (!token) {
     userDisplay.textContent = 'Not logged in';
     return;
   }
 
   try {
+    console.log("am ajuns")
+
+    // Make an API request to the /me route with the Authorization header
     const response = await axios.get('http://localhost:3000/api/v1/auth/me', {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
 
-    const { username } = response.data; // Adjust this field to match your data model
+    // Extract the username from the API response
+    const { username } = response.data;
     userDisplay.textContent = username || 'Anonymous User';
   } catch (error) {
-    userDisplay.textContent = 'Unable to fetch user data';
-    console.error(error);
+    // Provide a descriptive error message and log the error details
+    userDisplay.textContent = 'Unable to fetch  data';
+    console.error('Error drc:', error.response ? error.response.data : error.message);
   }
 }
 
+// Call the function to update user display
+
 // Fetch the user information on page load
 fetchCurrentUser();
+*/
   </script>
   </body>
 </html>
