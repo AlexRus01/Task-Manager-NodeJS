@@ -1,5 +1,5 @@
 const express = require('express');
-const { signup, signin, getCurrentUser } = require('../controllers/auth');
+const { signup, signin, getCurrentUser, checkAuth } = require('../controllers/auth');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -12,5 +12,6 @@ router.post('/signin', signin);
 
 // Get current user info (protected route)
 router.get('/me',authMiddleware, getCurrentUser);
+router.get('/checkAuth',authMiddleware,checkAuth);
 
 module.exports = router;
