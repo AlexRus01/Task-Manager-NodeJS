@@ -11,7 +11,6 @@ router.post('/signup', signup);
 router.post('/signin', signin);
 
 // Get current user info (protected route)
-router.get('/me',authMiddleware, getCurrentUser);
 router.get('/checkAuth',authMiddleware,checkAuth);
 
 module.exports = router;

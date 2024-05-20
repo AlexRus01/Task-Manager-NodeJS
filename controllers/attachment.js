@@ -3,6 +3,7 @@ const Task = require('../models/Task');
 const upload = require('../middleware/upload');
 const mongoose = require('mongoose');
 
+
 const uploadAttachment = async (req, res) => {
     const { taskId } = req.params;
 
@@ -24,10 +25,11 @@ const uploadAttachment = async (req, res) => {
         }
 
         if (!req.file) {
-            return res.status(400).json({ msg: 'No filesss uploaded' });
+            return res.status(400).json({ msg: 'No files uploaded' });
         }
 
         try {
+            // Save attachment
             const attachment = new Attachment({
                 filename: req.file.filename,
                 filepath: req.file.path,
@@ -35,9 +37,17 @@ const uploadAttachment = async (req, res) => {
             });
 
             await attachment.save();
+
+            // Ensure only the attachments array is updated without affecting the user field
+            task.attachments.push(attachment._id);
+            await Task.updateOne(
+                { _id: taskId },
+                { $push: { attachments: attachment._id } }
+            );
+
             res.status(201).json({ attachment });
         } catch (error) {
-            res.status(500).json({ msg: error.message });
+            res.status(401).json({ msg: error.message });
         }
     });
 };

@@ -8,6 +8,6 @@ const router = express.Router();
 router.post('/:taskId/upload', uploadAttachment);
 
 // Get all attachments for a task
-router.get('/:taskId', authMiddleware, getAttachments);
+router.get('/:taskId', getAttachments);
 
 module.exports = router;
