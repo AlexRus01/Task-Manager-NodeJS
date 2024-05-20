@@ -4,7 +4,7 @@ const express = require('express');
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/tasks');
 const cookieParser = require('cookie-parser'); // Require cookie-parser
-
+const commentRoutes = require('./routes/comment');
 const authMiddleware = require('./middleware/auth'); // Import your custom middleware
 const attachmentRoutes = require('./routes/attachment'); // Import attachment routes
 
@@ -21,6 +21,7 @@ app.use('/api/v1/auth', authRoutes);
 // Rute private (folosesc middleware-ul de autentificare)
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/attachments', attachmentRoutes); // Use attachment routes
+app.use('/api/comments', commentRoutes);
 
 
 const port = 3000;
