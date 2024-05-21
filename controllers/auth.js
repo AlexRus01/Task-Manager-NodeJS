@@ -70,14 +70,14 @@ const getCurrentUser = async (req, res) => {
 const checkAuth = async (req, res) => {
   try {
     console.log("checkauth");
-    if (!req.user || !req.user.userId) {
+    if (!req.user || !req.user._id) {
       return res.status(401).json({ msg: 'Unauthorized: No user information available' });
     }
-    const user = await User.findById(req.user.userId).select('-password');
+    const user = await User.findById(req.user._id).select('-password');
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-    
+
     res.status(200).json({ user });
   } catch (error) {
     console.error('Error in checkAuth:', error);

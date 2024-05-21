@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const uploadAttachment = async (req, res) => {
     const { taskId } = req.params;
 
-    // Check if taskId is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(taskId)) {
         return res.status(400).json({ msg: 'Invalid task ID format' });
     }
