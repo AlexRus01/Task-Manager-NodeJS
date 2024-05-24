@@ -43,30 +43,26 @@ const signin = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   try {
     console.log("am ajuns in getcurrentuser")
-    // Add logging to understand what information is missing
-    console.log('Request user object:', req.body.username);
+    console.log(req.body.username);
     
-    // Verify if `req.user` is correctly populated
     if (!req.user || !req.user._id) {
-      console.error('User information missing in request.');
-      return res.status(405).json({ msg: 'Unauthorized: No user information available' });
+      console.error();
+      return res.status(405).json({ msg: 'Unauthorized' });
     }
 
-    // Find user by their ID without the password
     const user = await User.findById(req.user._id).select('-password');
     
     if (!user) {
       return res.status(406).json({ msg: 'User not found' });
     }
 
-    // Return user info without sensitive data
     res.status(200).json(user);
   } catch (error) {
     console.error('Error in getCurrentUser:', error);
     res.status(500).json({ msg: 'Server error in the function' });
   }
 };
-// controllers/auth.js
+
 const checkAuth = async (req, res) => {
   try {
     console.log("checkauth");
@@ -85,6 +81,31 @@ const checkAuth = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+    await User.findByIdAndDelete(req.user._id);
+    res.status(200).json({ msg: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error in deleteUser:', error);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};
 
+const updateUser = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+    const updates = req.body;
+    const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true }).select('-password');
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error in updateUser:', error);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};
 
-module.exports = { signup, signin, getCurrentUser, checkAuth };
+module.exports = { signup, signin, getCurrentUser, checkAuth, deleteUser, updateUser };
